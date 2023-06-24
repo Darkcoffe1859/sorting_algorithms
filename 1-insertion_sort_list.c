@@ -1,54 +1,57 @@
-#include <sort.h>
+#include "sort.h"
 
+void swap(listint_t **head, listint_t *node1, listint_t *node2);
 /**
- * insertion_sort_list - sort a doubly linked list of integer
- * in ascending order
- * @list: pointer to the head of the doubly linked list
+ * insertion_sort_list - sorts a doubly linked list with
+ * the insertion sort algorithm
+ *
+ * @list: list to be sorted in doubly linked list
+ *
+ * Return: void
  */
-
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *curr = NULL;
-	listint_t *insertion = NULL;
+	listint_t *forw, *tmp;
 
 	if (list == NULL || *list == NULL || (*list)->next == NULL)
 		return;
 
-	curr = (*list)->next;
-	insertion = curr->prev;
-	while (curr != NULL)
+	for (forw = (*list)->next; forw && forw->prev; forw = forw->next)
 	{
-		insertion = curr->prev;
-		while (insertion != NULL && insertion->n > curr->n)
+		for (; forw && forw->prev && forw->n < forw->prev->n;
+		     forw = forw->prev)
 		{
-			move_left(curr, insertion, list);
-			insertion = curr->prev;
+			tmp = forw->prev;
+			swap(list, tmp, forw);
+			print_list(*list);
+			forw = forw->next;
 		}
-		curr = curr->next;
 	}
 }
+
 /**
-* move_left - swaps two members of a list
-*
-* @curr: current node to be moved at left of insertion
-* @insertion: insertion pointer
-* @head: head of list
-*/
-void move_left(listint_t *curr, listint_t *insertion, listint_t **head)
+ * swap - swaps two nodes
+ * @head: the head node
+ * @node1: The first node
+ * @node2: the second node
+ *
+ * Return: void
+ */
+void swap(listint_t **head, listint_t *node1, listint_t *node2)
 {
-	listint_t *swap1 = curr->next;
-	listint_t *swap2 = insertion->prev;
+	listint_t *prev, *next;
 
-	if (swap1 != NULL)
-		swap1->prev = insertion;
-	if (swap2 != NULL)
-		swap2->next = curr;
-	curr->prev = swap2;
-	insertion->next = swap1;
-	curr->next = insertion;
-	insertion->prev = curr;
-	if (*head == insertion)
-		*head = curr;
-	print_list(*head);
+	prev = node1->prev;
+	next = node2->next;
+
+	if (prev != NULL)
+		prev->next = node2;
+	else
+		*head = node2;
+	node1->prev = node2;
+	node1->next = next;
+	node2->prev = prev;
+	node2->next = node1;
+	if (next)
+		next->prev = node1;
 }
-
