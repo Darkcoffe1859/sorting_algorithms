@@ -1,47 +1,35 @@
-#include <sort.h>
+#include "sort.h"
 /**
- * print_array - print an array
- * @size: size of the array
+ * selection_sort - sort an array using selection method
+ * @array: an array
+ * @size: size of array
  */
-
-void print_array(const int *array, size_t size)
-{
-    size_t i;
-
-    for (i = 0; i < size; i++) {
-        if (i != 0)
-            printf(", ");
-        printf("%d", array[i]);
-    }
-    printf("\n");
-}
-
-void swap(int *a, int *b)
-{
-    int temp = *a;
-    *a = *b;
-    *b = temp;
-}
-/**
- * selection_sort - sort an array of integer in ascending order 
- * using selection sort algorithm
- * @array: the array of the sorted integer
- * @size: size of the sorted array
- */
-
 void selection_sort(int *array, size_t size)
 {
-    size_t i, j, min_idx;
+	unsigned int i, j;
+	unsigned int min, temp;
 
-    for (i = 0; i < size - 1; i++) {
-        min_idx = i;
-        for (j = i + 1; j < size; j++) {
-            if (array[j] < array[min_idx])
-                min_idx = j;
-        }
-        if (min_idx != i) {
-            swap(&array[i], &array[min_idx]);
-            print_array(array, size);
-        }
-    }
+	if (array == NULL || size < 2)
+		return;
+
+	for (i = 0; i < size; i++)
+	{
+		min = i;
+		for (j = i + 1; j < size; j++)
+
+		{
+			if (array[j] < array[min])
+			{
+				min = j;
+			}
+
+		}
+		if (min != i)
+		{
+			temp = array[i];
+			array[i] = array[min];
+			array[min] = temp;
+			print_array(array, size);
+		}
+	}
 }
