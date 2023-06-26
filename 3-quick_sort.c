@@ -1,69 +1,86 @@
-
 #include "sort.h"
 
 /**
- * partition - array partition
- * @array: array to sort
- * @first: first position
- * @last: last position
- * @size: array size
- * Return: int pivot index
+ * trade - swaps two integers
+ * @a: integer
+ * @b: integer
  */
-int partition(int *array, int first, int last, size_t size)
+void trade(int *a, int *b)
 {
-	int i = first - 1, aux, j;
+	int x;
 
-	for (j = first; j <= last - 1; j++)
+	x = *a;
+	*a = *b;
+	*b = x;
+}
+
+/**
+ * partition - sorts an array of integers in ascending order
+ * using the Quick sort algorithm
+ * @end: final array
+ * @start: first array
+ * @array: array of integers
+ * @size: size of array
+ * Return: i + 1.
+ */
+size_t partition(int *array, size_t start, size_t end, size_t size)
+{
+	size_t i, j;
+	int pivot = array[end];
+
+	i = start - 1;
+	for (j = start; j < end; j++)
 	{
-		if (array[j] < array[last])
+		if (array[j] < pivot)
 		{
 			i++;
-			if (i < j)
+			if (i != j)
 			{
-				aux = array[i];
-				array[i] = array[j];
-				array[j] = aux;
+				trade(&array[i], &array[j]);
 				print_array(array, size);
 			}
 		}
 	}
-	if (array[i + 1] > array[last])
+
+	if (pivot < array[i + 1])
 	{
-		aux = array[i + 1];
-		array[i + 1] = array[last];
-		array[last] = aux;
+		trade(&array[i + 1], &array[end]);
 		print_array(array, size);
 	}
-
 	return (i + 1);
 }
 
 /**
- * qs - sorts an array of integers recursively
- * @array: array to sort
- * @first: first position
- * @last: last position
- * @size: array size
+ * quick_sort_imp - sorts an array of integers in ascending
+ * order using the Quick sort algorithm
+ *
+ * @array: array of integers
+ *
+ * @low: size of array
+ * @hi: size of array
+ * @size: size of array
  */
-void qs(int *array, int first, int last, size_t size)
+void quick_sort_imp(int *array, int low, int hi, size_t size)
 {
-	int pivot;
+	int par;
 
-	if (first < last)
+	if (low < hi)
 	{
-		pivot = partition(array, first, last, size);
-		qs(array, first, pivot - 1, size);
-		qs(array, pivot + 1, last, size);
+		par = partition(array, low, hi, size);
+		quick_sort_imp(array, low, par - 1, size);
+		quick_sort_imp(array, par + 1, hi, size);
 	}
 }
 
 /**
- * quick_sort - sorts an array of integers using the Quick
- * sort algorithm in ascending order
- * @array: array to sort
- * @size: array size
+ * quick_sort - sorts an array of integers in ascending
+ * order using the Quick sort algorithm
+ *
+ * @array: array of integers
+ *
+ * @size: size of array
  */
 void quick_sort(int *array, size_t size)
 {
-	qs(array, 0, size - 1, size);
+	quick_sort_imp(array, (size_t)0, size - 1, size);
 }
