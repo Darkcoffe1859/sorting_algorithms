@@ -1,86 +1,82 @@
 #include "sort.h"
 
 /**
- * trade - swaps two integers
- * @a: integer
- * @b: integer
+ * swap - Swap values of start and next index.
+ * @array: the array to work in.
+ * @size: size of array.
+ * @low: left most value
+ * @high: right most value
+ * Return: nothing.
  */
-void trade(int *a, int *b)
+void swap(int *array, size_t size, int low, int high)
 {
-	int x;
+	int temp;
 
-	x = *a;
-	*a = *b;
-	*b = x;
-}
-
-/**
- * partition - sorts an array of integers in ascending order
- * using the Quick sort algorithm
- * @end: final array
- * @start: first array
- * @array: array of integers
- * @size: size of array
- * Return: i + 1.
- */
-size_t partition(int *array, size_t start, size_t end, size_t size)
-{
-	size_t i, j;
-	int pivot = array[end];
-
-	i = start - 1;
-	for (j = start; j < end; j++)
+	if (array[low] != array[high])
 	{
-		if (array[j] < pivot)
-		{
-			i++;
-			if (i != j)
-			{
-				trade(&array[i], &array[j]);
-				print_array(array, size);
-			}
-		}
-	}
-
-	if (pivot < array[i + 1])
-	{
-		trade(&array[i + 1], &array[end]);
+		temp = array[low];
+		array[low] = array[high];
+		array[high] = temp;
 		print_array(array, size);
 	}
+}
+/**
+ * partition - using Lomuto partition scheme for quicksort
+ * @array: pointer to array
+ * @size: size of array
+ * @low: left most value
+ * @high: right most value
+ * Return: pivot value
+ */
+int partition(int *array, size_t size, int low, int high)
+{
+	int pivot_value = array[high];
+
+	int i = low - 1, j;
+
+	for (j = low; j <= high; j++)
+	{
+		if (array[j] < pivot_value)
+		{
+			i++;
+			swap(array, size, i, j);
+
+		}
+	}
+	swap(array, size, i + 1, high);
+
 	return (i + 1);
 }
-
 /**
- * quick_sort_imp - sorts an array of integers in ascending
- * order using the Quick sort algorithm
- *
- * @array: array of integers
- *
- * @low: size of array
- * @hi: size of array
+ * quicksort_recursion - recursive funtion for quicksort
+ * @array: pointer to array
  * @size: size of array
+ * @low: lowest value
+ * @high: highest value
  */
-void quick_sort_imp(int *array, int low, int hi, size_t size)
+void quicksort_recursion(int *array, size_t size, int low, int high)
 {
-	int par;
+	int pivot_index;
 
-	if (low < hi)
+	if (low < high)
 	{
-		par = partition(array, low, hi, size);
-		quick_sort_imp(array, low, par - 1, size);
-		quick_sort_imp(array, par + 1, hi, size);
+		pivot_index = partition(array, size, low, high);
+		quicksort_recursion(array, size, low, pivot_index - 1);
+		quicksort_recursion(array, size, pivot_index + 1, high);
 	}
 }
-
 /**
- * quick_sort - sorts an array of integers in ascending
- * order using the Quick sort algorithm
- *
- * @array: array of integers
- *
- * @size: size of array
+ * quick_sort - sorts an array of integers in ascending order
+ * using the Quick sort algorithm
+ * @array: the array to sort.
+ * @size: size of the array.
+ * Return: nothing.
  */
 void quick_sort(int *array, size_t size)
 {
-	quick_sort_imp(array, (size_t)0, size - 1, size);
+	if (!array || size < 2)
+		return;
+
+	quicksort_recursion(array, size, 0, size - 1);
 }
+
